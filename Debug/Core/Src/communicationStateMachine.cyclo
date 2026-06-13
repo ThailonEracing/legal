@@ -1,0 +1,2 @@
+communicationStateMachine.c:16:6:StateMachine_Init	2
+communicationStateMachine.c:29:6:StateMachine_Update	6

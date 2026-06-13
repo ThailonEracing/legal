@@ -1,0 +1,6 @@
+buttons.c:50:9:ucButtonsInit	6
+buttons.c:106:22:xButtonsGetButton	6
+buttons.c:135:6:vButtonsDebouncingStart	4
+buttons.c:172:6:vButtonsDebouncingStop	6
+buttons.c:220:13:vButtonsPressedCallback	1
+buttons.c:231:13:vButtonsReleasedCallback	1

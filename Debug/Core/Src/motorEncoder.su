@@ -1,0 +1,7 @@
+../Core/Src/motorEncoder.c:49:13:vMotorEncoderSetDirection	16	static
+../Core/Src/motorEncoder.c:149:6:vMotorEncoderInitMotors	24	static
+../Core/Src/motorEncoder.c:195:6:vMotorEncoderControlMotor	24	static
+../Core/Src/motorEncoder.c:236:6:vMotorEncoderInitEncoders	24	static
+../Core/Src/motorEncoder.c:268:7:fMotorEncoderReadVelocity	16	static
+../Core/Src/motorEncoder.c:292:6:vMotorEncoderHandleTimerReset	16	static
+../Core/Src/motorEncoder.c:329:6:vMotorEncoderHandleTimerCapture	88	static

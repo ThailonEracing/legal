@@ -1,0 +1,6 @@
+../Core/Src/buttons.c:50:9:ucButtonsInit	32	static
+../Core/Src/buttons.c:106:22:xButtonsGetButton	24	static
+../Core/Src/buttons.c:135:6:vButtonsDebouncingStart	24	static
+../Core/Src/buttons.c:172:6:vButtonsDebouncingStop	16	static
+../Core/Src/buttons.c:220:13:vButtonsPressedCallback	16	static
+../Core/Src/buttons.c:231:13:vButtonsReleasedCallback	16	static

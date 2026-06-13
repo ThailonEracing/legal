@@ -1,0 +1,7 @@
+motorEncoder.c:49:13:vMotorEncoderSetDirection	11
+motorEncoder.c:149:6:vMotorEncoderInitMotors	1
+motorEncoder.c:195:6:vMotorEncoderControlMotor	13
+motorEncoder.c:236:6:vMotorEncoderInitEncoders	1
+motorEncoder.c:268:7:fMotorEncoderReadVelocity	3
+motorEncoder.c:292:6:vMotorEncoderHandleTimerReset	5
+motorEncoder.c:329:6:vMotorEncoderHandleTimerCapture	3

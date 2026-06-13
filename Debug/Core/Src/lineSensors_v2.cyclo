@@ -1,0 +1,6 @@
+lineSensors_v2.c:61:6:vLineSensors_v2_Init	5
+lineSensors_v2.c:136:6:vLineSensors_v2_ResetCalibration	2
+lineSensors_v2.c:153:6:vLineSensors_v2_UpdateCalibration	4
+lineSensors_v2.c:181:7:fLineSensors_v2_GetSensorValue	3
+lineSensors_v2.c:213:6:vLineSensors_v2_SetInterpolationWeigths	1
+lineSensors_v2.c:231:7:fLineSensors_v2_GetInterpolatedValue	4

@@ -1,0 +1,2 @@
+../Core/Src/communicationStateMachine.c:16:6:StateMachine_Init	24	static
+../Core/Src/communicationStateMachine.c:29:6:StateMachine_Update	16	static

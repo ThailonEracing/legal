@@ -1,0 +1,6 @@
+../Core/Src/lineSensors_v2.c:61:6:vLineSensors_v2_Init	608	static
+../Core/Src/lineSensors_v2.c:136:6:vLineSensors_v2_ResetCalibration	16	static
+../Core/Src/lineSensors_v2.c:153:6:vLineSensors_v2_UpdateCalibration	16	static
+../Core/Src/lineSensors_v2.c:181:7:fLineSensors_v2_GetSensorValue	24	static
+../Core/Src/lineSensors_v2.c:213:6:vLineSensors_v2_SetInterpolationWeigths	32	static
+../Core/Src/lineSensors_v2.c:231:7:fLineSensors_v2_GetInterpolatedValue	24	static

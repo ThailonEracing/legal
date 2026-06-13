@@ -1,0 +1,8 @@
+../Core/Src/lcd_hd44780_i2c.c:58:6:lcdInit	32	static
+../Core/Src/lcd_hd44780_i2c.c:137:6:lcdCommand	24	static
+../Core/Src/lcd_hd44780_i2c.c:257:6:lcdBacklight	16	static
+../Core/Src/lcd_hd44780_i2c.c:277:6:lcdSetCursorPosition	24	static
+../Core/Src/lcd_hd44780_i2c.c:296:6:lcdPrintStr	24	static
+../Core/Src/lcd_hd44780_i2c.c:311:6:lcdPrintChar	16	static
+../Core/Src/lcd_hd44780_i2c.c:327:6:lcdLoadCustomChar	24	static
+../Core/Src/lcd_hd44780_i2c.c:355:13:lcdWriteByte	16	static
