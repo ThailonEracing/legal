@@ -1,4 +1,4 @@
-/**-
+/**
  * @file      lineSensors.h
  * @brief     Declares the line sensor interface functions and types.
  *

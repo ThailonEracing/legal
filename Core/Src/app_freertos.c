@@ -88,9 +88,9 @@ void task_Controle(void *argument) {
     estado_emergencia = roboData.flag_colisao;
     osMutexRelease(Mutex_SensoresHandle);
 
-    // MÁQUINA DE ESTADOS: Verifica se o robô bateu
+    // M�?QUINA DE ESTADOS: Verifica se o robô bateu
     if (estado_emergencia == 1) {
-        // --- ESTADO DE EMERGÊNCIA (OBSTÁCULO) ---
+        // --- ESTADO DE EMERGÊNCIA (OBST�?CULO) ---
 
         // 1. Para os motores imediatamente (0% de Duty Cycle)
         __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
@@ -183,3 +183,4 @@ void task_Odometria(void *argument) {
 }
 
 /* USER CODE END Application */
+
