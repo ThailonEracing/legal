@@ -56,7 +56,7 @@ RoboData_t roboData;
 extern I2C_HandleTypeDef hi2c2;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim8;
-extern TIM_HandleTypeDef htim16;  // ← adiciona
+extern TIM_HandleTypeDef htim16;  // �? adiciona
 extern TIM_HandleTypeDef htim17;
 extern osMutexId_t Mutex_SensoresHandle;
 
@@ -127,6 +127,7 @@ void task_Controle(void *argument) {
                 repeticao_buzzer++;
             }
         }
+       osDelay(10);
 
 
     } else {
@@ -172,7 +173,7 @@ void task_Controle(void *argument) {
 
         // 2. Velocidade angular proporcional ao erro de posição
         //    Kp_dir = 5.0 → ajustar experimentalmente
-        float fOmega = 2.0f * fPosicao;  // rad/s
+        float fOmega = 1.0f * fPosicao;  // rad/s
 
         // 3. Modelo cinemático diferencial → setpoints de velocidade
         float fVdirRef = V_BASE_CM_S + fOmega * (TRACK_WIDTH_CM / 2.0f);
@@ -238,6 +239,12 @@ void task_Bluetooth(void *argument) {
 }
 
 void task_Odometria(void *argument) {
+  /* Loop infinito da task de Odometria */
+  for(;;) {
+    osDelay(50);
+  }
+}
+void task_LvBateria(void *argument) {
   /* Loop infinito da task de Odometria */
   for(;;) {
     osDelay(50);

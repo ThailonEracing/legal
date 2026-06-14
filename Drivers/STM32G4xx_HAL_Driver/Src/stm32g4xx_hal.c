@@ -123,7 +123,7 @@ uint32_t uwTickFreq = HAL_TICK_FREQ_DEFAULT;  /* 1KHz */
             (numerically lower) than the peripheral interrupt. Otherwise the caller
             ISR process will be blocked.
        (++) functions affecting time base configurations are declared as __weak
-             to make  override possible  in case of other  implementations in  file.
+             to make  override possible  in case of other  implementations in user file.
 @endverbatim
   * @{
   */

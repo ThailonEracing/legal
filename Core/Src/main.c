@@ -103,6 +103,13 @@ const osThreadAttr_t task_bluetooth_attributes = {
   .priority = (osPriority_t) osPriorityBelowNormal,
   .stack_size = 128 * 4
 };
+/* Definitions for task_LVBateria */
+osThreadId_t task_LVBateriaHandle;
+const osThreadAttr_t task_LVBateria_attributes = {
+  .name = "task_LVBateria",
+  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 128 * 4
+};
 /* Definitions for Queue_Comandos */
 osMessageQueueId_t Queue_ComandosHandle;
 const osMessageQueueAttr_t Queue_Comandos_attributes = {
@@ -156,6 +163,7 @@ extern void task_Controle(void *argument);
 extern void task_Sensores(void *argument);
 extern void task_Odometria(void *argument);
 extern void task_Bluetooth(void *argument);
+void task_LvBateria(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -165,7 +173,7 @@ extern void task_Bluetooth(void *argument);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
-;;
+
 /**
   * @brief  The application entry point.
   * @retval int
@@ -277,6 +285,9 @@ int main(void)
 
   /* creation of task_bluetooth */
   task_bluetoothHandle = osThreadNew(task_Bluetooth, NULL, &task_bluetooth_attributes);
+
+  /* creation of task_LVBateria */
+  task_LVBateriaHandle = osThreadNew(task_LvBateria, NULL, &task_LVBateria_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1406,6 +1417,24 @@ void task_Main(void *argument)
   /* USER CODE END 5 */
 }
 
+/* USER CODE BEGIN Header_task_LvBateria */
+/**
+* @brief Function implementing the task_LVBateria thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_task_LvBateria */
+void task_LvBateria(void *argument)
+{
+  /* USER CODE BEGIN task_LvBateria */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END task_LvBateria */
+}
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
@@ -1419,19 +1448,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-	  /* USER CODE BEGIN Callback 0 */
-	  if (htim->Instance == TIM16) {
-	      vMotorEncoderHandleTimerReset(MOTORENCODER_MOTOR_LEFT);
-	  }
-	  else if (htim->Instance == TIM17) {
-	      vMotorEncoderHandleTimerReset(MOTORENCODER_MOTOR_RIGHT);
-	  }
-	  /* USER CODE END Callback 0 */
-
-	  if (htim->Instance == TIM6) {
-	    HAL_IncTick();
-	  }
-
+  if (htim->Instance == TIM6) {
+    HAL_IncTick();
+  }
   /* USER CODE BEGIN Callback 1 */
 
   /* USER CODE END Callback 1 */
