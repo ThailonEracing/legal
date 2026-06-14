@@ -109,24 +109,23 @@ void task_Controle(void *argument) {
 
     // M�?QUINA DE ESTADOS: Verifica se o robô bateu
     if (estado_emergencia == 1) {
-        // --- ESTADO DE EMERGÊNCIA (OBST�?CULO) ---
+        // Para os motores via biblioteca
+        vMotorEncoderControlMotor(MOTORENCODER_MOTOR_RIGHT,
+            MOTORENCODER_DIRECTION_STOP, 0.0f);
+        vMotorEncoderControlMotor(MOTORENCODER_MOTOR_LEFT,
+            MOTORENCODER_DIRECTION_STOP, 0.0f);
 
-        // 1. Para os motores imediatamente (0% de Duty Cycle)
-        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
-        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-
-        // 2. Aciona o Buzzer por um tempo limitado a um numero de repetições (apita a cada ~250ms)
+        // Buzzer — mantém como estava
         if (repeticao_buzzer < 8) {
-        	// O período do TIM8 está em 999. Vamos usar um duty de 500 (50%).
-        	contador_buzzer++;
-        	if (contador_buzzer < 25) { // 25 * 10ms = 250ms ligado
-        		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 500);
-        	} else if (contador_buzzer < 50) { // 250ms desligado
-        		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
-        	} else {
-        		contador_buzzer = 0; // Reinicia o ciclo
-        		repeticao_buzzer ++;
-        	}
+            contador_buzzer++;
+            if (contador_buzzer < 25) {
+                __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 500);
+            } else if (contador_buzzer < 50) {
+                __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
+            } else {
+                contador_buzzer = 0;
+                repeticao_buzzer++;
+            }
         }
 
 
@@ -189,7 +188,7 @@ void task_Controle(void *argument) {
 
         // 6. Aplica nos motores
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_RIGHT,
-            MOTORENCODER_DIRECTION_FORWARD, fPwmDir);
+            MOTORENCODER_DIRECTION_BACKWARD, fPwmDir);
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_LEFT,
             MOTORENCODER_DIRECTION_FORWARD, fPwmEsq);
     }
