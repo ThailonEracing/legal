@@ -183,4 +183,3 @@ void task_Odometria(void *argument) {
 }
 
 /* USER CODE END Application */
-
