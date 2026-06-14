@@ -43,7 +43,8 @@ Core/Src/app_freertos.o: ../Core/Src/app_freertos.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
  ../Core/Inc/communicationStateMachine.h ../Core/Inc/main.h \
- ../Core/Inc/lcd_hd44780_i2c.h \
+ ../Core/Inc/lcd_hd44780_i2c.h ../Core/Inc/pid.h \
+ ../Core/Inc/motorEncoder.h ../Core/Inc/lineSensors_v2.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
@@ -93,5 +94,8 @@ Core/Src/app_freertos.o: ../Core/Src/app_freertos.c \
 ../Core/Inc/communicationStateMachine.h:
 ../Core/Inc/main.h:
 ../Core/Inc/lcd_hd44780_i2c.h:
+../Core/Inc/pid.h:
+../Core/Inc/motorEncoder.h:
+../Core/Inc/lineSensors_v2.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:

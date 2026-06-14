@@ -20,8 +20,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32g4xx_it.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "motorEncoder.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -340,5 +343,16 @@ void TIM6_DAC_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
+// Chamado quando o encoder gera um pulso (input capture)
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+    if (htim->Instance == TIM16) {
+        vMotorEncoderHandleTimerCapture(MOTORENCODER_MOTOR_LEFT);
+    }
+    else if (htim->Instance == TIM17) {
+        vMotorEncoderHandleTimerCapture(MOTORENCODER_MOTOR_RIGHT);
+    }
+}
 
 /* USER CODE END 1 */

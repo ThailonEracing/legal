@@ -69,59 +69,40 @@ void vLineSensors_v2_Init(lineSensorsAdcEnum_t xLeftAdc,
                       lineSensorsAdcEnum_t xRightAdc,
                       lineSensorsRankEnum_t xRightRank)
 {
-  lineSensorsConfig_t xConfig[LINESENSORS_SENSOR_COUNT];
-  unsigned char ucAdcCount[LINESENSORS_ADC_COUNT] = {0U};
-  unsigned char ucIndex;
-  uint16_t *pAdcBuffer[LINESENSORS_ADC_COUNT];
-  ADC_HandleTypeDef pAdcHandle[LINESENSORS_ADC_COUNT];
+  extern ADC_HandleTypeDef hadc1, hadc2, hadc3, hadc4, hadc5;
 
+  uint16_t *pAdcBuffer[LINESENSORS_ADC_COUNT];
   pAdcBuffer[LINESENSORS_ADC_1] = xLineSensors_v2_Attributes.usBufferAdc1;
   pAdcBuffer[LINESENSORS_ADC_2] = xLineSensors_v2_Attributes.usBufferAdc2;
   pAdcBuffer[LINESENSORS_ADC_3] = xLineSensors_v2_Attributes.usBufferAdc3;
   pAdcBuffer[LINESENSORS_ADC_4] = xLineSensors_v2_Attributes.usBufferAdc4;
   pAdcBuffer[LINESENSORS_ADC_5] = xLineSensors_v2_Attributes.usBufferAdc5;
 
-  pAdcHandle[LINESENSORS_ADC_1].Instance = ADC1;
-  pAdcHandle[LINESENSORS_ADC_2].Instance = ADC2;
-  pAdcHandle[LINESENSORS_ADC_3].Instance = ADC3;
-  pAdcHandle[LINESENSORS_ADC_4].Instance = ADC4;
-  pAdcHandle[LINESENSORS_ADC_5].Instance = ADC5;
+  lineSensorsConfig_t xConfig[LINESENSORS_SENSOR_COUNT];
+  unsigned char ucIndex;
 
-  xConfig[LINESENSORS_SENSOR_LEFT].xAdc = xLeftAdc;
-  xConfig[LINESENSORS_SENSOR_LEFT].xRank = xLeftRank;
-
-  xConfig[LINESENSORS_SENSOR_CENTERLEFT].xAdc = xCenterLeftAdc;
+  xConfig[LINESENSORS_SENSOR_LEFT].xAdc        = xLeftAdc;
+  xConfig[LINESENSORS_SENSOR_LEFT].xRank       = xLeftRank;
+  xConfig[LINESENSORS_SENSOR_CENTERLEFT].xAdc  = xCenterLeftAdc;
   xConfig[LINESENSORS_SENSOR_CENTERLEFT].xRank = xCenterLeftRank;
-
-  xConfig[LINESENSORS_SENSOR_CENTER].xAdc = xCenterAdc;
-  xConfig[LINESENSORS_SENSOR_CENTER].xRank = xCenterRank;
-
-  xConfig[LINESENSORS_SENSOR_CENTERRIGHT].xAdc = xCenterRightAdc;
+  xConfig[LINESENSORS_SENSOR_CENTER].xAdc      = xCenterAdc;
+  xConfig[LINESENSORS_SENSOR_CENTER].xRank     = xCenterRank;
+  xConfig[LINESENSORS_SENSOR_CENTERRIGHT].xAdc  = xCenterRightAdc;
   xConfig[LINESENSORS_SENSOR_CENTERRIGHT].xRank = xCenterRightRank;
-
-  xConfig[LINESENSORS_SENSOR_RIGHT].xAdc = xRightAdc;
-  xConfig[LINESENSORS_SENSOR_RIGHT].xRank = xRightRank;
-
-  for (ucIndex = 0U; ucIndex < LINESENSORS_SENSOR_COUNT; ucIndex++)
-  {
-    ucAdcCount[xConfig[ucIndex].xAdc]++;
-  }
+  xConfig[LINESENSORS_SENSOR_RIGHT].xAdc       = xRightAdc;
+  xConfig[LINESENSORS_SENSOR_RIGHT].xRank      = xRightRank;
 
   for (ucIndex = 0U; ucIndex < LINESENSORS_SENSOR_COUNT; ucIndex++)
   {
-	  xLineSensors_v2_Attributes.pBuffer[ucIndex] =
+    xLineSensors_v2_Attributes.pBuffer[ucIndex] =
       &pAdcBuffer[xConfig[ucIndex].xAdc][xConfig[ucIndex].xRank];
   }
 
-  for (ucIndex = 0U; ucIndex < LINESENSORS_ADC_COUNT; ucIndex++)
-  {
-    if (0U != ucAdcCount[ucIndex])
-    {
-      HAL_ADC_Start_DMA(&pAdcHandle[ucIndex],
-                        (uint32_t *)pAdcBuffer[ucIndex],
-                        ucAdcCount[ucIndex]);
-    }
-  }
+   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)pAdcBuffer[LINESENSORS_ADC_1], 2U);
+   HAL_ADC_Start_DMA(&hadc2, (uint32_t*)pAdcBuffer[LINESENSORS_ADC_2], 1U);
+   HAL_ADC_Start_DMA(&hadc3, (uint32_t*)pAdcBuffer[LINESENSORS_ADC_3], 1U);
+   HAL_ADC_Start_DMA(&hadc4, (uint32_t*)pAdcBuffer[LINESENSORS_ADC_4], 1U);
+   HAL_ADC_Start_DMA(&hadc5, (uint32_t*)pAdcBuffer[LINESENSORS_ADC_5], 1U);
 
   vLineSensors_v2_SetInterpolationWeigths(-0.5f, -1.0f, 0.0f, 1.0f, 0.5f);
   vLineSensors_v2_ResetCalibration();

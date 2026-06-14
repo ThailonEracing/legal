@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lineSensors_v2.h"
+#include "motorEncoder.h"
+
 
 /* USER CODE END Includes */
 
@@ -163,7 +165,7 @@ extern void task_Bluetooth(void *argument);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
-
+;;
 /**
   * @brief  The application entry point.
   * @retval int
@@ -171,8 +173,14 @@ extern void task_Bluetooth(void *argument);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	  vLineSensors_v2_Init(
+	      LINESENSORS_ADC_1, LINESENSORS_RANK_1,   // IR1 → LEFT
+	      LINESENSORS_ADC_2, LINESENSORS_RANK_1,   // IR2 → CENTER LEFT
+	      LINESENSORS_ADC_3, LINESENSORS_RANK_1,   // IR3 → CENTER
+	      LINESENSORS_ADC_4, LINESENSORS_RANK_1,   // IR4 → CENTER RIGHT
+	      LINESENSORS_ADC_5, LINESENSORS_RANK_1    // IR5 → RIGHT
+	  );
 
-	vLineSensors_v2_Init();
 
   /* USER CODE END 1 */
 
@@ -374,7 +382,11 @@ static void MX_ADC1_Init(void)
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.DMAContinuousRequests = ENABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
-  hadc1.Init.OversamplingMode = DISABLE;
+  hadc1.Init.OversamplingMode = ENABLE;
+  hadc1.Init.Oversampling.Ratio = ADC_OVERSAMPLING_RATIO_128;
+  hadc1.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_7;
+  hadc1.Init.Oversampling.TriggeredMode = ADC_TRIGGEREDMODE_SINGLE_TRIGGER;
+  hadc1.Init.Oversampling.OversamplingStopReset = ADC_REGOVERSAMPLING_CONTINUED_MODE;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
     Error_Handler();
@@ -392,7 +404,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_47CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -578,7 +590,7 @@ static void MX_ADC4_Init(void)
   hadc4.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc4.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc4.Init.LowPowerAutoWait = DISABLE;
-  hadc4.Init.ContinuousConvMode = DISABLE;
+  hadc4.Init.ContinuousConvMode = ENABLE;
   hadc4.Init.NbrOfConversion = 1;
   hadc4.Init.DiscontinuousConvMode = DISABLE;
   hadc4.Init.ExternalTrigConv = ADC_SOFTWARE_START;
@@ -1407,9 +1419,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
-    HAL_IncTick();
-  }
+	  /* USER CODE BEGIN Callback 0 */
+	  if (htim->Instance == TIM16) {
+	      vMotorEncoderHandleTimerReset(MOTORENCODER_MOTOR_LEFT);
+	  }
+	  else if (htim->Instance == TIM17) {
+	      vMotorEncoderHandleTimerReset(MOTORENCODER_MOTOR_RIGHT);
+	  }
+	  /* USER CODE END Callback 0 */
+
+	  if (htim->Instance == TIM6) {
+	    HAL_IncTick();
+	  }
+
   /* USER CODE BEGIN Callback 1 */
 
   /* USER CODE END Callback 1 */
