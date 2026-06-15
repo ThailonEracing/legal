@@ -40,6 +40,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+float fVbat = 0.0f;
+float fVelDir = 0.0f;
+float fVelEsq = 0.0f;
+uint8_t ucDisplayIniciado = 0U;
 
 /* USER CODE END PD */
 
@@ -245,11 +249,85 @@ void task_Odometria(void *argument) {
   }
 }
 void task_LvBateria(void *argument) {
-  /* Loop infinito da task de Odometria */
-  for(;;) {
-    osDelay(50);
-  }
+    extern ADC_HandleTypeDef hadc2;
+
+    for (;;) {
+        // Para o DMA do IR2 temporariamente
+        HAL_ADC_Stop_DMA(&hadc2);
+
+        // Lê PA7 (bateria) por polling — ADC2 canal IN4
+        HAL_ADC_Start(&hadc2);
+        if (HAL_ADC_PollForConversion(&hadc2, 10) == HAL_OK) {
+            uint32_t raw = HAL_ADC_GetValue(&hadc2);
+
+            // Oversampling ratio=128, right shift=3 → divisor efetivo = 128/8 = 16
+            // Mas o HAL já aplica o shift, então raw já é o valor corrigido
+            // 12 bits → Vpa7 = raw / 4095.0 * 3.3
+            float fVpa7 = ((float)raw / 4095.0f) * 3.3f;
+            float fVbatNova = fVpa7 * 2.0f;  // divisor R1=R2=3M3
+
+            osMutexAcquire(Mutex_SensoresHandle, osWaitForever);
+            fVbat = fVbatNova;
+            osMutexRelease(Mutex_SensoresHandle);
+        }
+        HAL_ADC_Stop(&hadc2);
+
+
+
+        osDelay(1000);  // lê bateria a cada 1s
+    }
 }
 
+
+void floatToStr(char *buf, float val, int decimais) {
+    int inteiro = (int)val;
+    int frac    = (int)((val - inteiro) * (decimais == 1 ? 10 : 100));
+    if (frac < 0) frac = -frac;
+    if (decimais == 1)
+        sprintf(buf, "%d.%01d", inteiro, frac);
+    else
+        sprintf(buf, "%d.%02d", inteiro, frac);
+}
+
+void task_display(void *argument) {
+    extern I2C_HandleTypeDef hi2c2;
+    char buf[17];
+
+    // Init LCD — endereço 0x27 ou 0x3F dependendo do módulo
+    lcdInit(&hi2c2, 0x27, 2, 16);
+    lcdDisplayOn();
+    lcdBacklightOn();
+    lcdDisplayClear();
+
+    for (;;) {
+        float vbat, vdir, vesq;
+
+        // Lê dados compartilhados
+        osMutexAcquire(Mutex_SensoresHandle, osWaitForever);
+        vbat = fVbat;
+        vdir = fVelDir;
+        vesq = fVelEsq;
+        osMutexRelease(Mutex_SensoresHandle);
+
+        // Linha 0: tensão da bateria
+        // Ex: "Bat:  7.40V     "
+        lcdSetCursorPosition(0, 0);
+        char sBat[8], sDir[7], sEsq[7];
+
+        floatToStr(sBat, vbat, 2);   // "7.40"
+        floatToStr(sDir, vdir, 1);   // "15.2"
+        floatToStr(sEsq, vesq, 1);   // "14.8"
+
+        lcdSetCursorPosition(0, 0);
+        snprintf(buf, sizeof(buf), "Bat: %sV        ", sBat);
+        lcdPrintStr((uint8_t*)buf, 16);
+
+        lcdSetCursorPosition(1, 0);
+        snprintf(buf, sizeof(buf), "D:%s E:%s    ", sDir, sEsq);
+        lcdPrintStr((uint8_t*)buf, 16);
+
+        osDelay(1000);  // atualiza a cada 1s
+    }
+}
 /* USER CODE END Application */
 

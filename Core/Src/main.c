@@ -110,6 +110,13 @@ const osThreadAttr_t task_LVBateria_attributes = {
   .priority = (osPriority_t) osPriorityLow,
   .stack_size = 128 * 4
 };
+/* Definitions for task_Display */
+osThreadId_t task_DisplayHandle;
+const osThreadAttr_t task_Display_attributes = {
+  .name = "task_Display",
+  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 128 * 4
+};
 /* Definitions for Queue_Comandos */
 osMessageQueueId_t Queue_ComandosHandle;
 const osMessageQueueAttr_t Queue_Comandos_attributes = {
@@ -163,7 +170,8 @@ extern void task_Controle(void *argument);
 extern void task_Sensores(void *argument);
 extern void task_Odometria(void *argument);
 extern void task_Bluetooth(void *argument);
-void task_LvBateria(void *argument);
+extern void task_LvBateria(void *argument);
+extern void task_display(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -288,6 +296,9 @@ int main(void)
 
   /* creation of task_LVBateria */
   task_LVBateriaHandle = osThreadNew(task_LvBateria, NULL, &task_LVBateria_attributes);
+
+  /* creation of task_Display */
+  task_DisplayHandle = osThreadNew(task_display, NULL, &task_Display_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1415,24 +1426,6 @@ void task_Main(void *argument)
     osDelay(1);
   }
   /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_task_LvBateria */
-/**
-* @brief Function implementing the task_LVBateria thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_task_LvBateria */
-void task_LvBateria(void *argument)
-{
-  /* USER CODE BEGIN task_LvBateria */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END task_LvBateria */
 }
 
 /**
