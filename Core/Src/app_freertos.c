@@ -194,6 +194,8 @@ void task_Controle(void *argument) {
             MOTORENCODER_DIRECTION_BACKWARD, fPwmDir);
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_LEFT,
             MOTORENCODER_DIRECTION_FORWARD, fPwmEsq);
+        osDelay(10);
+
     }
   }
 }
@@ -247,20 +249,57 @@ void task_Odometria(void *argument) {
   }
 }
 void task_LvBateria(void *argument) {
+    extern ADC_HandleTypeDef hadc2;
 
     for (;;) {
+        HAL_ADC_Stop_DMA(&hadc2);
+        HAL_ADC_Start(&hadc2);
+        if (HAL_ADC_PollForConversion(&hadc2, 10) == HAL_OK) {
+            uint32_t raw = HAL_ADC_GetValue(&hadc2);
+            float fVpa7 = ((float)raw / 4095.0f) * 3.3f;
 
+            osMutexAcquire(Mutex_SensoresHandle, osWaitForever);
+            fVbat = fVpa7 * 2.0f;
+            osMutexRelease(Mutex_SensoresHandle);
+        }
+        HAL_ADC_Stop(&hadc2);
+        HAL_ADC_Start_DMA(&hadc2, (uint32_t*)g_bufIR2, 1U);
 
-
-        osDelay(1000);  // lê bateria a cada 1s
+        osDelay(1000);  // ← obrigatório
     }
 }
 void task_display(void *argument) {
+    extern I2C_HandleTypeDef hi2c2;
+    char buf[17];
+    char sBat[8], sDir[7], sEsq[7];
 
-
+    lcdInit(&hi2c2, 0x27, 2, 16);
+    lcdDisplayOn();
+    lcdBacklightOn();
+    lcdDisplayClear();
 
     for (;;) {
+        float vbat, vdir, vesq;
 
+        osMutexAcquire(Mutex_SensoresHandle, osWaitForever);
+        vbat = fVbat;
+        vdir = fVelDir;
+        vesq = fVelEsq;
+        osMutexRelease(Mutex_SensoresHandle);
+
+        floatToStr(sBat, vbat, 2);
+        floatToStr(sDir, vdir, 1);
+        floatToStr(sEsq, vesq, 1);
+
+        lcdSetCursorPosition(0, 0);
+        snprintf(buf, sizeof(buf), "Bat: %sV        ", sBat);
+        lcdPrintStr((uint8_t*)buf, 16);
+
+        lcdSetCursorPosition(1, 0);
+        snprintf(buf, sizeof(buf), "D:%s E:%s    ", sDir, sEsq);
+        lcdPrintStr((uint8_t*)buf, 16);
+
+        osDelay(1000);  // ← obrigatório
     }
 }
 /* USER CODE END Application */
