@@ -56,6 +56,8 @@ DMA_HandleTypeDef hdma_adc4;
 DMA_HandleTypeDef hdma_adc5;
 
 I2C_HandleTypeDef hi2c2;
+DMA_HandleTypeDef hdma_i2c2_rx;
+DMA_HandleTypeDef hdma_i2c2_tx;
 
 UART_HandleTypeDef hlpuart1;
 UART_HandleTypeDef huart3;
@@ -189,13 +191,39 @@ extern void task_display(void *argument);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	  vLineSensors_v2_Init(
-	      LINESENSORS_ADC_1, LINESENSORS_RANK_1,   // IR1 → LEFT
-	      LINESENSORS_ADC_2, LINESENSORS_RANK_1,   // IR2 → CENTER LEFT
-	      LINESENSORS_ADC_3, LINESENSORS_RANK_1,   // IR3 → CENTER
-	      LINESENSORS_ADC_4, LINESENSORS_RANK_1,   // IR4 → CENTER RIGHT
-	      LINESENSORS_ADC_5, LINESENSORS_RANK_1    // IR5 → RIGHT
-	  );
+//	  vLineSensors_v2_Init(
+//	      LINESENSORS_ADC_1, LINESENSORS_RANK_1,   // IR1 → LEFT
+//	      LINESENSORS_ADC_2, LINESENSORS_RANK_1,   // IR2 → CENTER LEFT
+//	      LINESENSORS_ADC_3, LINESENSORS_RANK_1,   // IR3 → CENTER
+//	      LINESENSORS_ADC_4, LINESENSORS_RANK_1,   // IR4 → CENTER RIGHT
+//	      LINESENSORS_ADC_5, LINESENSORS_RANK_1    // IR5 → RIGHT
+//	  );
+	  unsigned char ucLCDLine1Buff[17], ucLCDLine2Buff[17];
+
+	  // Counter to be printed in the LCD display
+	  unsigned char ucCont = 0;
+
+	  // Initialize LCD Display
+	  lcdInit(&hi2c2, 0x27, 2, 16);
+
+	  // Set cursor at colum 0 of line 0
+	  lcdSetCursorPosition(0, 0);
+
+	  // Prepare the string to be written
+	  sprintf((char*)ucLCDLine1Buff, "  EU AMO EA670  ");
+
+	  // Update the first line of the display with the message
+	  lcdPrintStr(ucLCDLine1Buff, 16);
+
+	  // Set cursor at colum 0 of line 1
+	  lcdSetCursorPosition(0, 1);
+
+	  // Prepare the string to be written
+	  sprintf((char*)ucLCDLine2Buff, "  Contagem:  0  ");
+
+	  // Update the second line of the display with the message
+	  lcdPrintStr(ucLCDLine2Buff, 16);
+
 
 
   /* USER CODE END 1 */
@@ -236,9 +264,6 @@ int main(void)
   MX_ADC4_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);
 
   /* USER CODE END 2 */
 
@@ -1324,6 +1349,12 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+  /* DMA1_Channel6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+  /* DMA1_Channel7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
 
 }
 
