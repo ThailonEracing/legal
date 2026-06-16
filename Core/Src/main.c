@@ -238,12 +238,10 @@ int main(void)
   MX_TIM20_Init();
   MX_ADC4_Init();
   /* USER CODE BEGIN 2 */
-  /* USER CODE BEGIN 2 */
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);  // Motor esquerdo
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);  // Motor direito
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);  // Buzzer
 
-  unsigned char ucLCDLine1Buff[17], ucLCDLine2Buff[17];
 
 
 

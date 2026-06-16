@@ -193,7 +193,10 @@ void task_Controle(void *argument) {
             MOTORENCODER_DIRECTION_FORWARD, fPwmDir);
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_LEFT,
             MOTORENCODER_DIRECTION_FORWARD, fPwmEsq);
+        osDelay(10);
+
     }
+
 
 
   }

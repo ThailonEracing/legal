@@ -1,7 +1,7 @@
 ../Core/Src/app_freertos.c:87:6:HAL_GPIO_EXTI_Callback	16	static
-../Core/Src/app_freertos.c:98:6:task_Controle	40	static
-../Core/Src/app_freertos.c:201:6:task_Sensores	16	static
-../Core/Src/app_freertos.c:235:6:task_Bluetooth	16	static
-../Core/Src/app_freertos.c:244:6:task_Odometria	16	static
-../Core/Src/app_freertos.c:251:6:task_LvBateria	16	static
-../Core/Src/app_freertos.c:257:6:task_display	56	static
+../Core/Src/app_freertos.c:98:6:task_Controle	88	static
+../Core/Src/app_freertos.c:204:6:task_Sensores	16	static
+../Core/Src/app_freertos.c:238:6:task_Bluetooth	16	static
+../Core/Src/app_freertos.c:247:6:task_Odometria	16	static
+../Core/Src/app_freertos.c:254:6:task_LvBateria	16	static
+../Core/Src/app_freertos.c:260:6:task_display	56	static
