@@ -145,8 +145,8 @@ void task_Controle(void *argument) {
                 Motor_Esq_IN3_GPIO_Port, Motor_Esq_IN3_Pin,
                 Motor_Esq_IN4_GPIO_Port, Motor_Esq_IN4_Pin,
                 &htim1, TIM_CHANNEL_2,   // PWM direito
-                &htim1, TIM_CHANNEL_1    // PWM esquerdo
-            );
+               &htim1, TIM_CHANNEL_1    // PWM esquerdo
+           );
 
             vMotorEncoderInitEncoders(
                 &htim17, TIM_CHANNEL_1,  // encoder direito
@@ -194,6 +194,8 @@ void task_Controle(void *argument) {
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_LEFT,
             MOTORENCODER_DIRECTION_FORWARD, fPwmEsq);
     }
+
+
   }
 }
 void task_Sensores(void *argument) {
@@ -268,7 +270,7 @@ void task_display(void *argument)
   lcdSetCursorPosition(0, 0);
 
   // Prepare the string to be written
-  sprintf((char*)ucLCDLine1Buff, "  EU AMO ES670  ");
+  sprintf((char*)ucLCDLine1Buff, "  EU AMO Ea670  ");
 
   // Update the first line of the display with the message
   lcdPrintStr(ucLCDLine1Buff, 16);
@@ -306,10 +308,6 @@ void task_display(void *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-
-/* USER CODE END Application */
-
-
 
 /* USER CODE END Application */
 

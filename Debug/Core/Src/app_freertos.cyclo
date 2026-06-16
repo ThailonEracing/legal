@@ -1,7 +1,7 @@
 app_freertos.c:87:6:HAL_GPIO_EXTI_Callback	2
 app_freertos.c:98:6:task_Controle	6
-app_freertos.c:199:6:task_Sensores	5
-app_freertos.c:233:6:task_Bluetooth	1
-app_freertos.c:242:6:task_Odometria	1
-app_freertos.c:249:6:task_LvBateria	1
-app_freertos.c:255:6:task_display	2
+app_freertos.c:201:6:task_Sensores	5
+app_freertos.c:235:6:task_Bluetooth	1
+app_freertos.c:244:6:task_Odometria	1
+app_freertos.c:251:6:task_LvBateria	1
+app_freertos.c:257:6:task_display	2
