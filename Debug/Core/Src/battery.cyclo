@@ -1,0 +1,5 @@
+battery.c:36:6:vBatteryInit	1
+battery.c:49:6:vBatteryCalibrateMax	1
+battery.c:58:6:vBatteryCalibrateMin	1
+battery.c:67:10:usBatteryGetRawValue	1
+battery.c:77:10:usBatteryGetCharge	4

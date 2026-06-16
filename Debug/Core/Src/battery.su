@@ -1,0 +1,5 @@
+../Core/Src/battery.c:36:6:vBatteryInit	8	static
+../Core/Src/battery.c:49:6:vBatteryCalibrateMax	16	static
+../Core/Src/battery.c:58:6:vBatteryCalibrateMin	16	static
+../Core/Src/battery.c:67:10:usBatteryGetRawValue	4	static
+../Core/Src/battery.c:77:10:usBatteryGetCharge	16	static
