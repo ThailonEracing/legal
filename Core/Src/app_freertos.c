@@ -40,8 +40,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-float fVelDir = 0.0f;
-float fVelEsq = 0.0f;
 
 /* USER CODE END PD */
 
@@ -111,25 +109,25 @@ void task_Controle(void *argument) {
 
     // M�?QUINA DE ESTADOS: Verifica se o robô bateu
     if (estado_emergencia == 1) {
-        // Para os motores via biblioteca
-        vMotorEncoderControlMotor(MOTORENCODER_MOTOR_RIGHT,
-            MOTORENCODER_DIRECTION_STOP, 0.0f);
-        vMotorEncoderControlMotor(MOTORENCODER_MOTOR_LEFT,
-            MOTORENCODER_DIRECTION_STOP, 0.0f);
+        // --- ESTADO DE EMERGÊNCIA (OBST�?CULO) ---
 
-        // Buzzer — mantém como estava
+        // 1. Para os motores imediatamente (0% de Duty Cycle)
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
+
+        // 2. Aciona o Buzzer por um tempo limitado a um numero de repetições (apita a cada ~250ms)
         if (repeticao_buzzer < 8) {
-            contador_buzzer++;
-            if (contador_buzzer < 25) {
-                __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 500);
-            } else if (contador_buzzer < 50) {
-                __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
-            } else {
-                contador_buzzer = 0;
-                repeticao_buzzer++;
-            }
+        	// O período do TIM8 está em 999. Vamos usar um duty de 500 (50%).
+        	contador_buzzer++;
+        	if (contador_buzzer < 25) { // 25 * 10ms = 250ms ligado
+        		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 500);
+        	} else if (contador_buzzer < 50) { // 250ms desligado
+        		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
+        	} else {
+        		contador_buzzer = 0; // Reinicia o ciclo
+        		repeticao_buzzer ++;
+        	}
         }
-       osDelay(10);
 
 
     } else {
@@ -175,7 +173,7 @@ void task_Controle(void *argument) {
 
         // 2. Velocidade angular proporcional ao erro de posição
         //    Kp_dir = 5.0 → ajustar experimentalmente
-        float fOmega = 1.0f * fPosicao;  // rad/s
+        float fOmega = 2.0f * fPosicao;  // rad/s
 
         // 3. Modelo cinemático diferencial → setpoints de velocidade
         float fVdirRef = V_BASE_CM_S + fOmega * (TRACK_WIDTH_CM / 2.0f);
@@ -191,11 +189,9 @@ void task_Controle(void *argument) {
 
         // 6. Aplica nos motores
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_RIGHT,
-            MOTORENCODER_DIRECTION_BACKWARD, fPwmDir);
+            MOTORENCODER_DIRECTION_FORWARD, fPwmDir);
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_LEFT,
             MOTORENCODER_DIRECTION_FORWARD, fPwmEsq);
-        osDelay(10);
-
     }
   }
 }
@@ -248,59 +244,19 @@ void task_Odometria(void *argument) {
     osDelay(50);
   }
 }
+
 void task_LvBateria(void *argument) {
-    extern ADC_HandleTypeDef hadc2;
-
-    for (;;) {
-        HAL_ADC_Stop_DMA(&hadc2);
-        HAL_ADC_Start(&hadc2);
-        if (HAL_ADC_PollForConversion(&hadc2, 10) == HAL_OK) {
-            uint32_t raw = HAL_ADC_GetValue(&hadc2);
-            float fVpa7 = ((float)raw / 4095.0f) * 3.3f;
-
-            osMutexAcquire(Mutex_SensoresHandle, osWaitForever);
-            fVbat = fVpa7 * 2.0f;
-            osMutexRelease(Mutex_SensoresHandle);
-        }
-        HAL_ADC_Stop(&hadc2);
-        HAL_ADC_Start_DMA(&hadc2, (uint32_t*)g_bufIR2, 1U);
-
-        osDelay(1000);  // ← obrigatório
-    }
+  /* Loop infinito da task de Odometria */
+  for(;;) {
+    osDelay(50);
+  }
 }
 void task_display(void *argument) {
-    extern I2C_HandleTypeDef hi2c2;
-    char buf[17];
-    char sBat[8], sDir[7], sEsq[7];
-
-    lcdInit(&hi2c2, 0x27, 2, 16);
-    lcdDisplayOn();
-    lcdBacklightOn();
-    lcdDisplayClear();
-
-    for (;;) {
-        float vbat, vdir, vesq;
-
-        osMutexAcquire(Mutex_SensoresHandle, osWaitForever);
-        vbat = fVbat;
-        vdir = fVelDir;
-        vesq = fVelEsq;
-        osMutexRelease(Mutex_SensoresHandle);
-
-        floatToStr(sBat, vbat, 2);
-        floatToStr(sDir, vdir, 1);
-        floatToStr(sEsq, vesq, 1);
-
-        lcdSetCursorPosition(0, 0);
-        snprintf(buf, sizeof(buf), "Bat: %sV        ", sBat);
-        lcdPrintStr((uint8_t*)buf, 16);
-
-        lcdSetCursorPosition(1, 0);
-        snprintf(buf, sizeof(buf), "D:%s E:%s    ", sDir, sEsq);
-        lcdPrintStr((uint8_t*)buf, 16);
-
-        osDelay(1000);  // ← obrigatório
-    }
+  /* Loop infinito da task de Odometria */
+  for(;;) {
+    osDelay(50);
+  }
 }
+
 /* USER CODE END Application */
 

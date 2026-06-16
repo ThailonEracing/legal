@@ -75,49 +75,49 @@ osThreadId_t task_mainHandle;
 const osThreadAttr_t task_main_attributes = {
   .name = "task_main",
   .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 128 * 4
+  .stack_size = 256 * 4
 };
 /* Definitions for task_controle */
 osThreadId_t task_controleHandle;
 const osThreadAttr_t task_controle_attributes = {
   .name = "task_controle",
   .priority = (osPriority_t) osPriorityHigh,
-  .stack_size = 128 * 4
+  .stack_size = 512 * 4
 };
 /* Definitions for task_sensores */
 osThreadId_t task_sensoresHandle;
 const osThreadAttr_t task_sensores_attributes = {
   .name = "task_sensores",
   .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 128 * 4
+  .stack_size = 256 * 4
 };
 /* Definitions for task_odometria */
 osThreadId_t task_odometriaHandle;
 const osThreadAttr_t task_odometria_attributes = {
   .name = "task_odometria",
   .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 128 * 4
+  .stack_size = 256 * 4
 };
 /* Definitions for task_bluetooth */
 osThreadId_t task_bluetoothHandle;
 const osThreadAttr_t task_bluetooth_attributes = {
   .name = "task_bluetooth",
   .priority = (osPriority_t) osPriorityBelowNormal,
-  .stack_size = 128 * 4
+  .stack_size = 256 * 4
 };
 /* Definitions for task_LVBateria */
 osThreadId_t task_LVBateriaHandle;
 const osThreadAttr_t task_LVBateria_attributes = {
   .name = "task_LVBateria",
   .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 128 * 4
+  .stack_size = 256 * 4
 };
 /* Definitions for task_Display */
 osThreadId_t task_DisplayHandle;
 const osThreadAttr_t task_Display_attributes = {
   .name = "task_Display",
   .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 128 * 4
+  .stack_size = 256 * 4
 };
 /* Definitions for Queue_Comandos */
 osMessageQueueId_t Queue_ComandosHandle;
