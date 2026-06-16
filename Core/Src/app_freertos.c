@@ -128,6 +128,7 @@ void task_Controle(void *argument) {
         		repeticao_buzzer ++;
         	}
         }
+        osDelay(10);
 
 
     } else {
@@ -251,12 +252,64 @@ void task_LvBateria(void *argument) {
     osDelay(50);
   }
 }
-void task_display(void *argument) {
-  /* Loop infinito da task de Odometria */
-  for(;;) {
-    osDelay(50);
+void task_display(void *argument)
+{
+  /* USER CODE BEGIN testLCDTaskFunction */
+  // Declarete buffers to store the messages to be send to the display
+  unsigned char ucLCDLine1Buff[17], ucLCDLine2Buff[17];
+
+  // Counter to be printed in the LCD display
+  unsigned char ucCont = 0;
+
+  // Initialize LCD Display
+  lcdInit(&hi2c2, 0x27, 2, 16);
+
+  // Set cursor at colum 0 of line 0
+  lcdSetCursorPosition(0, 0);
+
+  // Prepare the string to be written
+  sprintf((char*)ucLCDLine1Buff, "  EU AMO ES670  ");
+
+  // Update the first line of the display with the message
+  lcdPrintStr(ucLCDLine1Buff, 16);
+
+  // Set cursor at colum 0 of line 1
+  lcdSetCursorPosition(0, 1);
+
+  // Prepare the string to be written
+  sprintf((char*)ucLCDLine2Buff, "  Contagem:  0  ");
+
+  // Update the second line of the display with the message
+  lcdPrintStr(ucLCDLine2Buff, 16);
+
+  /* Infinite loop */
+  for(;;)
+  {
+	// Block the task for 1 second
+    osDelay(1000);
+
+    // Ciclic update ucCont from 0 to 10
+    if(++ucCont > 10)
+    	ucCont = 0;
+
+    // Set cursor at colum 12 of line 1
+    lcdSetCursorPosition(12, 1);
+
+    // Prepare the string to be written (integer with 2 digits space)
+    sprintf((char*)ucLCDLine2Buff, "%2d", ucCont);
+
+    // Update part of the second line of the display with the ucCont value
+    lcdPrintStr(ucLCDLine2Buff, 2);
   }
+  /* USER CODE END testLCDTaskFunction */
 }
+
+/* Private application code --------------------------------------------------*/
+/* USER CODE BEGIN Application */
+
+/* USER CODE END Application */
+
+
 
 /* USER CODE END Application */
 

@@ -198,31 +198,6 @@ int main(void)
 //	      LINESENSORS_ADC_4, LINESENSORS_RANK_1,   // IR4 → CENTER RIGHT
 //	      LINESENSORS_ADC_5, LINESENSORS_RANK_1    // IR5 → RIGHT
 //	  );
-	  unsigned char ucLCDLine1Buff[17], ucLCDLine2Buff[17];
-
-	  // Counter to be printed in the LCD display
-	  unsigned char ucCont = 0;
-
-	  // Initialize LCD Display
-	  lcdInit(&hi2c2, 0x27, 2, 16);
-
-	  // Set cursor at colum 0 of line 0
-	  lcdSetCursorPosition(0, 0);
-
-	  // Prepare the string to be written
-	  sprintf((char*)ucLCDLine1Buff, "  EU AMO EA670  ");
-
-	  // Update the first line of the display with the message
-	  lcdPrintStr(ucLCDLine1Buff, 16);
-
-	  // Set cursor at colum 0 of line 1
-	  lcdSetCursorPosition(0, 1);
-
-	  // Prepare the string to be written
-	  sprintf((char*)ucLCDLine2Buff, "  Contagem:  0  ");
-
-	  // Update the second line of the display with the message
-	  lcdPrintStr(ucLCDLine2Buff, 16);
 
 
 
@@ -263,6 +238,14 @@ int main(void)
   MX_TIM20_Init();
   MX_ADC4_Init();
   /* USER CODE BEGIN 2 */
+  /* USER CODE BEGIN 2 */
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);  // Motor esquerdo
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);  // Motor direito
+  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);  // Buzzer
+
+  unsigned char ucLCDLine1Buff[17], ucLCDLine2Buff[17];
+
+
 
 
   /* USER CODE END 2 */
@@ -1332,6 +1315,7 @@ static void MX_DMA_Init(void)
   /* DMA controller clock enable */
   __HAL_RCC_DMAMUX1_CLK_ENABLE();
   __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
@@ -1349,12 +1333,12 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
-  /* DMA1_Channel6_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
-  /* DMA1_Channel7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
+  /* DMA2_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel1_IRQn);
+  /* DMA2_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel2_IRQn);
 
 }
 
@@ -1438,6 +1422,13 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM16) {
+        vMotorEncoderHandleTimerCapture(MOTORENCODER_MOTOR_LEFT);
+    } else if (htim->Instance == TIM17) {
+        vMotorEncoderHandleTimerCapture(MOTORENCODER_MOTOR_RIGHT);
+    }
+}
 
 /* USER CODE END 4 */
 
@@ -1470,7 +1461,11 @@ void task_Main(void *argument)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
-
+	if (htim->Instance == TIM16) {
+	    vMotorEncoderHandleTimerReset(MOTORENCODER_MOTOR_LEFT);
+	} else if (htim->Instance == TIM17) {
+	    vMotorEncoderHandleTimerReset(MOTORENCODER_MOTOR_RIGHT);
+	}
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {
     HAL_IncTick();
