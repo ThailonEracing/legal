@@ -67,12 +67,15 @@ pid_data_type xPidMotorEsq;
 #define V_BASE_CM_S     15.0f
 uint8_t ucIniciado = 0U;
 
-// --- VARI�?VEIS GLOBAIS DA BATERIA E ODOMETRIA ---
+// --- VARI�?VEIS GLOBAIS DA BATERIA E ODOMETRIA ---
 uint16_t gu16BateriaPorcentagem = 0U;
 float gfVdirReal = 0.0f;
 float gfVesqReal = 0.0f;
 float gfDistanciaDireitaCM = 0.0f;
 float gfDistanciaEsquerdaCM = 0.0f;
+
+float fPosicaoLinha = 0.0f;   // �? posição da linha: -1.0 a +1.0
+uint8_t ucSensoresIniciado = 0U;
 
 /* USER CODE END Variables */
 
@@ -106,9 +109,9 @@ void task_Controle(void *argument) {
     estado_emergencia = roboData.flag_colisao;
     osMutexRelease(Mutex_SensoresHandle);
 
-    // M�?QUINA DE ESTADOS: Verifica se o robô bateu
+    // M�?QUINA DE ESTADOS: Verifica se o robô bateu
     if (estado_emergencia == 1) {
-        // --- ESTADO DE EMERGÊNCIA (OBST�?CULO) ---
+        // --- ESTADO DE EMERGÊNCIA (OBST�?CULO) ---
 
         // 1. Para os motores imediatamente (0% de Duty Cycle)
         __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
@@ -118,7 +121,7 @@ void task_Controle(void *argument) {
         if (repeticao_buzzer < 8) {
             contador_buzzer++;
             if (contador_buzzer < 25) { // 25 * 10ms = 250ms ligado
-                __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 500);
+                __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 1000);
             } else if (contador_buzzer < 50) { // 250ms desligado
                 __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
             } else {
@@ -157,8 +160,10 @@ void task_Controle(void *argument) {
             ucIniciado = 1U;
         }
 
-        // 1. Posição da linha: -1.0 (esq) a +1.0 (dir)
-        float fPosicao = 0;
+        float fPosicao = 0.0f;
+        osMutexAcquire(Mutex_SensoresHandle, osWaitForever);
+        fPosicao = fPosicaoLinha;
+        osMutexRelease(Mutex_SensoresHandle);
 
         // 2. Velocidade angular proporcional ao erro de posição
         float fOmega = 2.0f * fPosicao;  // rad/s
@@ -322,6 +327,29 @@ void task_display(void *argument)
     lcdPrintStr(ucLCDLine2Buff, 16);
   }
   /* USER CODE END testLCDTaskFunction */
+}
+void task_Linhas(void *argument) {
+
+    // Init da lib — uma única vez antes do loop
+    vLineSensors_v2_Init(
+        LINESENSORS_ADC_1, LINESENSORS_RANK_1,   // IR1 → LEFT
+        LINESENSORS_ADC_2, LINESENSORS_RANK_1,   // IR2 → CENTER LEFT
+        LINESENSORS_ADC_3, LINESENSORS_RANK_1,   // IR3 → CENTER
+        LINESENSORS_ADC_4, LINESENSORS_RANK_1,   // IR4 → CENTER RIGHT
+        LINESENSORS_ADC_5, LINESENSORS_RANK_1    // IR5 → RIGHT
+    );
+
+    for (;;) {
+        // Lê posição interpolada da linha: -1.0 (esq) a +1.0 (dir)
+        float fPos = fLineSensors_v2_GetInterpolatedValue();
+
+        // Armazena no mutex para a task_Controle consumir
+        osMutexAcquire(Mutex_SensoresHandle, osWaitForever);
+        fPosicaoLinha = fPos;
+        osMutexRelease(Mutex_SensoresHandle);
+
+        osDelay(10);  // 100Hz
+    }
 }
 
 /* USER CODE END Application */

@@ -122,6 +122,13 @@ const osThreadAttr_t task_Display_attributes = {
   .priority = (osPriority_t) osPriorityLow,
   .stack_size = 256 * 4
 };
+/* Definitions for task_linhas */
+osThreadId_t task_linhasHandle;
+const osThreadAttr_t task_linhas_attributes = {
+  .name = "task_linhas",
+  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 128 * 4
+};
 /* Definitions for Queue_Comandos */
 osMessageQueueId_t Queue_ComandosHandle;
 const osMessageQueueAttr_t Queue_Comandos_attributes = {
@@ -184,6 +191,7 @@ extern void task_Odometria(void *argument);
 extern void task_Bluetooth(void *argument);
 extern void task_LvBateria(void *argument);
 extern void task_display(void *argument);
+void task_Linhas(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -201,13 +209,7 @@ extern void task_display(void *argument);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-//	  vLineSensors_v2_Init(
-//	      LINESENSORS_ADC_1, LINESENSORS_RANK_1,   // IR1 → LEFT
-//	      LINESENSORS_ADC_2, LINESENSORS_RANK_1,   // IR2 → CENTER LEFT
-//	      LINESENSORS_ADC_3, LINESENSORS_RANK_1,   // IR3 → CENTER
-//	      LINESENSORS_ADC_4, LINESENSORS_RANK_1,   // IR4 → CENTER RIGHT
-//	      LINESENSORS_ADC_5, LINESENSORS_RANK_1    // IR5 → RIGHT
-//	  );
+
 
 
 
@@ -320,6 +322,9 @@ int main(void)
 
   /* creation of task_Display */
   task_DisplayHandle = osThreadNew(task_display, NULL, &task_Display_attributes);
+
+  /* creation of task_linhas */
+  task_linhasHandle = osThreadNew(task_Linhas, NULL, &task_linhas_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1530,6 +1535,14 @@ void task_Main(void *argument)
   }
   /* USER CODE END 5 */
 }
+
+/* USER CODE BEGIN Header_task_Linhas */
+/**
+* @brief Function implementing the task_linhas thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_task_Linhas */
 
 /**
   * @brief  Period elapsed callback in non blocking mode
