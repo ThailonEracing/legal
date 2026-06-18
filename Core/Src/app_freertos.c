@@ -177,15 +177,15 @@ void task_Controle(void *argument) {
         float fVesqMed = fMotorEncoderReadVelocity(MOTORENCODER_MOTOR_LEFT);
 
         // 5. PIDs de velocidade → PWM [0.0, 1.0]
-        float fPwmDir = fPidUpdateData(&xPidMotorDir, fVdirRef, fVdirMed);
-        float fPwmEsq = fPidUpdateData(&xPidMotorEsq, fVesqRef, fVesqMed);
+        float fPwmDir = fPidUpdateData(&xPidMotorDir, 2, fVdirMed);
+        float fPwmEsq = fPidUpdateData(&xPidMotorEsq, 2, fVesqMed);
 
         // 6. Aplica nos motores
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_RIGHT,
             MOTORENCODER_DIRECTION_BACKWARD, fPwmDir);
         vMotorEncoderControlMotor(MOTORENCODER_MOTOR_LEFT,
             MOTORENCODER_DIRECTION_FORWARD, fPwmEsq);
-        osDelay(10);
+        osDelay(30);
     }
   }
 }
@@ -285,11 +285,6 @@ void task_display(void *argument)
   // Inicializa o display LCD
   lcdInit(&hi2c2, 0x27, 2, 16);
 
-  // Inicializa o texto estático na primeira linha
-  lcdSetCursorPosition(0, 0);
-  sprintf((char*)ucLCDLine1Buff, "  EU AMO Ea670  ");
-  lcdPrintStr(ucLCDLine1Buff, 16);
-
   /* Infinite loop */
   for(;;)
   {
@@ -339,6 +334,7 @@ void task_Linhas(void *argument) {
         LINESENSORS_ADC_5, LINESENSORS_RANK_1    // IR5 → RIGHT
     );
 
+
     for (;;) {
         // Lê posição interpolada da linha: -1.0 (esq) a +1.0 (dir)
         float fPos = fLineSensors_v2_GetInterpolatedValue();
@@ -348,7 +344,7 @@ void task_Linhas(void *argument) {
         fPosicaoLinha = fPos;
         osMutexRelease(Mutex_SensoresHandle);
 
-        osDelay(10);  // 100Hz
+        osDelay(50);
     }
 }
 

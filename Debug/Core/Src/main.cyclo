@@ -21,5 +21,5 @@ main.c:1398:13:MX_DMA_Init	1
 main.c:1436:13:MX_GPIO_Init	1
 main.c:1511:6:HAL_TIM_IC_CaptureCallback	3
 main.c:1528:6:task_Main	1
-main.c:1555:6:HAL_TIM_PeriodElapsedCallback	4
-main.c:1576:6:Error_Handler	1
+main.c:1548:6:HAL_TIM_PeriodElapsedCallback	4
+main.c:1569:6:Error_Handler	1

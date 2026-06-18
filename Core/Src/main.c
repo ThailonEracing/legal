@@ -113,14 +113,14 @@ osThreadId_t task_LVBateriaHandle;
 const osThreadAttr_t task_LVBateria_attributes = {
   .name = "task_LVBateria",
   .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 256 * 4
+  .stack_size = 128 * 4
 };
 /* Definitions for task_Display */
 osThreadId_t task_DisplayHandle;
 const osThreadAttr_t task_Display_attributes = {
   .name = "task_Display",
   .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 256 * 4
+  .stack_size = 128 * 4
 };
 /* Definitions for task_linhas */
 osThreadId_t task_linhasHandle;
@@ -1536,13 +1536,6 @@ void task_Main(void *argument)
   /* USER CODE END 5 */
 }
 
-/* USER CODE BEGIN Header_task_Linhas */
-/**
-* @brief Function implementing the task_linhas thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_task_Linhas */
 
 /**
   * @brief  Period elapsed callback in non blocking mode

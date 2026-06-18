@@ -5,4 +5,4 @@ app_freertos.c:220:6:task_Bluetooth	1
 app_freertos.c:227:6:task_Odometria	5
 app_freertos.c:256:6:task_LvBateria	2
 app_freertos.c:275:6:task_display	4
-app_freertos.c:331:6:task_Linhas	1
+app_freertos.c:326:6:task_Linhas	1

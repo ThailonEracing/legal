@@ -21,5 +21,5 @@
 ../Core/Src/main.c:1436:13:MX_GPIO_Init	48	static
 ../Core/Src/main.c:1511:6:HAL_TIM_IC_CaptureCallback	16	static
 ../Core/Src/main.c:1528:6:task_Main	16	static
-../Core/Src/main.c:1555:6:HAL_TIM_PeriodElapsedCallback	16	static
-../Core/Src/main.c:1576:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:1548:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/main.c:1569:6:Error_Handler	4	static,ignoring_inline_asm
